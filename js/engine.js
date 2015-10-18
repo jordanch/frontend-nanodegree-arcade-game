@@ -152,7 +152,7 @@ var Engine = (function(global) {
             enemy.render();
         });
 
-        player.render();
+        player.render(); //this is *******************************************************************************
     }
 
     /* This function does nothing but it could have been a good place to
@@ -181,4 +181,5 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+    global.canvas = canvas;
 })(this);

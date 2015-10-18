@@ -3,7 +3,7 @@ var RIGHTOFCANVAS = 505 + 50,
     LEFTOFCANVAS = -100,
     ENEMYSPEED = 66;
 
-//console.log(Engine.ctx);
+console.log(document.Engine.canvas);
 
 
 //random movement helper function. Code from: http://stackoverflow.com/questions/1527803/generating-random-numbers-in-javascript-in-a-specific-range
@@ -48,7 +48,7 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 
-//since there is only one player, no prototype property will be utilised
+//since there is only one player, no prototype object will be utilised
 
 var player = function() {
     
@@ -61,86 +61,40 @@ var player = function() {
 
     this.sprite = 'images/char-boy.png';
     this.movement = [0, 0]; //declare and initialize player(this).movement array. 0 index is horizontal and  1 index is verticle
-    this.x = 218; // initialize player start x co-ord
-    this.y = 460; // initialize player start y co-ord
+    this.x = 200; // initialize player start x co-ord
+    this.y = 400; // initialize player start y co-ord
     
     this.update = function() {
-        console.log(this.x, this.y);
-        console.log(this.movement[0]);
-        
-        if (this.playerMovement == 'left') {
-
-             if (this.x + playerLeft > 0) {
-            
-                this.x += this.movement[0];
-                
-                this.movement[0] = 0; //reset movement[0] vector after each frame update
-            }
-
-        }
-
-        else if (this.playerMovement == 'right') {
-
-            if (this.x + playerRight < window.canvas.width) {
-
-                this.x += this.movement[0];
-                
-                this.movement[0] = 0; //reset movement[0] vector after each frame update
-
-            }
-
-        };
-           
-
-            
-
-        // if (this.y + playerUp >= 0 || this.y + playerDown <= window.canvas.height) {
-            
+        // if (this.x > 0 + PLAYERHORIZONTALVELOCITY && this.x < Engine.canvas.width + PLAYERHORIZONTALVELOCITY) {
+        //     this.x += this.movement[0];
+        //     this.movement[0] = 0; //reset movement[0] vector after each frame update
+        // }
+        // else if (this.y > 0 + PLAYERVERTICLEVELOCITY && this.y < Engine.canvas.height + PLAYERVERTICLEVELOCITY) {
         //     this.y += this.movement[1];
-            
-        //     this.movement[1] = 0; //reset movement[0] vector after each frame update
+        //     this.movement[1] = 0;
         // };
     };
 
     this.render = function() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-        ctx.fillRect(0, 400, 10, 10);
     };
 
     this.handleInput = function(keyCode) {
-        
-
         if (keyCode == 'left') { // left movement on keyup
-            
-            if (this.x + playerLeft > 0) {
-
-                this.movement[0] += playerLeft;
-                this.playerMovement = 'left';
-                //console.log('hello');
-
-            }
-          
+            this.movement[0] += playerLeft;
+            //console.log('hello');
         }
 
         else if (keyCode == 'right') { // right movement on keyup
-
-            if (this.x + playerRight < window.canvas.width) {
-
-                this.movement[0] += playerRight;
-                this.playerMovement = 'right';
-
-            }
-
+            this.movement[0] += playerRight;
         }
 
         else if (keyCode == 'up') { // up movement on keyup
             this.movement[1] += playerUp;
-            this.playerMovement = 'up';
         }
 
         else if (keyCode == 'down') { // down movement on keyup
             this.movement[1] += playerDown;
-            this.playerMovement = 'down';
         };
     };
 };
