@@ -68,38 +68,14 @@ var player = function() {
         console.log(this.x, this.y);
         console.log(this.movement[0]);
         
-        if (this.playerMovement == 'left') {
-
-             if (this.x + playerLeft > 0) {
-            
+       
                 this.x += this.movement[0];
                 
-                this.movement[0] = 0; //reset movement[0] vector after each frame update
-            }
+                this.movement[0] = 0; //reset movement[0] Z vector after each frame update
 
-        }
-
-        else if (this.playerMovement == 'right') {
-
-            if (this.x + playerRight < window.canvas.width) {
-
-                this.x += this.movement[0];
+                this.y += this.movement[1];
                 
-                this.movement[0] = 0; //reset movement[0] vector after each frame update
-
-            }
-
-        };
-           
-
-            
-
-        // if (this.y + playerUp >= 0 || this.y + playerDown <= window.canvas.height) {
-            
-        //     this.y += this.movement[1];
-            
-        //     this.movement[1] = 0; //reset movement[0] vector after each frame update
-        // };
+                this.movement[1] = 0; //reset movement[1] Y vector after each frame update
     };
 
     this.render = function() {
@@ -118,7 +94,7 @@ var player = function() {
                 this.playerMovement = 'left';
                 //console.log('hello');
 
-            }
+            };
           
         }
 
@@ -129,18 +105,30 @@ var player = function() {
                 this.movement[0] += playerRight;
                 this.playerMovement = 'right';
 
-            }
+            };
 
         }
 
         else if (keyCode == 'up') { // up movement on keyup
-            this.movement[1] += playerUp;
-            this.playerMovement = 'up';
+
+            if (this.y + playerUp > 0) {
+
+                this.movement[1] += playerUp;
+                this.playerMovement = 'up';
+
+            };
+            
         }
 
         else if (keyCode == 'down') { // down movement on keyup
-            this.movement[1] += playerDown;
-            this.playerMovement = 'down';
+
+            if (this.y + playerDown < window.canvas.height - PLAYERVERTICLEVELOCITY) {
+
+                this.movement[1] += playerDown;
+                this.playerMovement = 'down';
+
+            };
+            
         };
     };
 };
