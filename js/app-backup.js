@@ -64,7 +64,7 @@ var player = function() {
     this.x = 200; // initialize player start x co-ord
     this.y = 400; // initialize player start y co-ord
     
-    this.update = function() {
+    this.update = function(dt) {
         // if (this.x > 0 + PLAYERHORIZONTALVELOCITY && this.x < Engine.canvas.width + PLAYERHORIZONTALVELOCITY) {
         //     this.x += this.movement[0];
         //     this.movement[0] = 0; //reset movement[0] vector after each frame update
