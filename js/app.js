@@ -5,7 +5,17 @@ var RIGHTOFCANVAS = window.canvas.width + 50,
 
 
 function getRandomArbitrary(min, max) { //random movement helper function. Code from: http://stackoverflow.com/questions/1527803/generating-random-numbers-in-javascript-in-a-specific-range
+    /**
+     * Returns a random number between min (inclusive) and max (exclusive)
+     */
     return (Math.random() * (max - min) + min);
+};
+
+function getRandomArbitraryWhole(min, max) { 
+    /**
+     * Returns a random whole number between min (inclusive) and max (exclusive)
+     */
+    return Math.round((Math.random() * (max - min) + min));
 };
 
 var Enemy = function(y) {
@@ -19,56 +29,34 @@ var Enemy = function(y) {
 
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-    this.x += this.movement * dt * ENEMYSPEED; 
-    
+    this.x += this.movement * dt * ENEMYSPEED;   
 };
 
 Enemy.prototype.collission = function() {
-    //collision code
-    // if (this.x < player.x + player.center[0] && this.x + this.width > player.x + player.center[0]) { // x-cord range collission check 
-    //     if (this.y < player.y + player.center[1] && this.y + this.height > player.y + player.center[1]) { // y-cord range collission check
-    //         player.playerRespawn();
-    //     };
-    // };
     var playerXLength = player.x + player.width;
     var enemyXLength = this.x + this.width;
     var playerYLength = player.y + player.height;
     var enemyYLength = this.y + this.height;
-
     if (this.x < player.x + player.width && // Thanks to Luca from cohort Friday: 12PM SAST for assisting with collision code. 
         this.x + this.width > player.x && 
         this.y < player.y + player.height && 
         this.y + this.height > player.y) {
             player.playerRespawnNegative();
     };
-
-
-    //console.log(playerXLength);
-    // if (this.x > player.x && this.x < playerXLength && enemyXLength > player.x && enemyXLength > playerXLength || 
-    //     this.x < player.x && this.x < playerXLength && enemyXLength > player.x && enemyXLength < playerXLength) { // x-cord range collission check 
-    //     if (this.y > player.y && this.y < playerYLength && enemyYLength > player.y && enemyYLength > playerYLength || 
-    //         this.y < player.y && this.y < playerYLength && enemyYLength > player.y && enemyYLength < playerYLength) { // y-cord range collission check
-    //         player.playerRespawn();
-    //         console.log('awesome');
-    //     };
-    // };
 };
 
 Enemy.prototype.render = function() {
-    if (this.x < RIGHTOFCANVAS) { //505px is the width of the canvas. Add 50px so that the enemy passes the screen and more, thus allowing some time before respawning on the left
+    if (this.x < RIGHTOFCANVAS) { // 505px is the width of the canvas. Add 50px so that the enemy passes the screen and more, thus allowing some time before respawning on the left
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y); 
-        //ctx.fillRect(this.x, this.y, this.width, this.height);   
     }
     else {
-        this.movement = getRandomArbitrary(3, 5); //when an enemy reaches the canvas's "virtual" right hand side, it's movement must be randomly adjusted before it respawns. 
+        this.movement = getRandomArbitrary(3, 5); // when an enemy reaches the canvas's "virtual" right hand side, it's movement must be randomly adjusted before it respawns. 
         this.x = LEFTOFCANVAS;
+        this.y = enemyPosition[getRandomArbitraryWhole(0, 2)];
     };
 };
 
-//since there is only one player, no prototype property will be utilised
+// since there is only one player, no prototype property will be utilised
 var player = function() {
     
     var PLAYERHORIZONTALVELOCITY = 100,
@@ -80,7 +68,7 @@ var player = function() {
         playerLeft = -1 * PLAYERHORIZONTALVELOCITY;
 
     this.sprite = 'images/char-boy.png';
-    this.movement = [0, 0]; //declare and initialize this.movement array. index 0 is horizontal and index 1 is verticle
+    this.movement = [0, 0]; // declare and initialize this.movement array. index 0 is horizontal and index 1 is verticle
     this.width = 62;
     this.height = 71;
     this.center = [this.width / 2, this.height / 2];
@@ -102,57 +90,27 @@ var player = function() {
         document.getElementById("points").innerHTML = player.points;
         this.x = 218; 
         this.y = 470; 
-        console.log(this.x);
-        console.log(this.y);
         this.hasReachedEnd = false;  
-        console.log(this.hasReachedEnd);
     };
-     
-    // this.update = function() {
-    //     this.x += this.movement[0];
-    //     this.movement[0] = 0; //reset movement[0] Z vector after each frame update
-    //     this.y += this.movement[1];
-    //     this.movement[1] = 0; //reset movement[1] Y vector after each frame update
-    //     if (this.y < 100) {
-    //         var timeAtCall = Date.now();
-    //         while (this.y < 100) {
-    //             var timeAtCallNewTick = Date.now();
-    //             if (timeAtCallNewTick > timeAtCall + 2000) {
-    //                 this.playerRespawn();
-    //                 this.points += 1;
-    //                 document.getElementById("points").innerHTML = this.points;
-                    
-    //             };
-    //         };
-    //     };
-    // };
 
     this.update = function() {
         this.x += this.movement[0];
-        this.movement[0] = 0; //reset movement[0] Z vector after each frame update
+        this.movement[0] = 0; // reset movement[0] Z vector after each frame update
         this.y += this.movement[1];
-        this.movement[1] = 0; //reset movement[1] Y vector after each frame update
+        this.movement[1] = 0; // reset movement[1] Y vector after each frame update
         if (this.y < 100 && this.hasReachedEnd == false) {
             this.hasReachedEnd = true;   
             console.log(this.hasReachedEnd);
-            var timeout = window.setTimeout(this.playerRespawnPositive.bind(this), 2000);
+            var timeout = window.setTimeout(this.playerRespawnPositive.bind(this), 2000); // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this#As_an_object_method
         }
-        else if (this.y > 100) {
-            clearTimeout(timeout);
+        if (this.y > 100 && this.hasReachedEnd == true) {
+            window.clearTimeout(timeout);
+            console.log('clear');
         };
-        
-        
-
-        // while (this.hasReachedEnd == true) {
-        //     this.hasReachedEnd = false; // change flag to false
-            
-        //     console.log('changed to false');    
-        // };
     };
 
     this.render = function() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-        //ctx.fillRect(this.x, this.y, player.width, player.height);
     };
     
     this.handleInput = function(keyCode) {
@@ -201,16 +159,17 @@ var player = function() {
     };
 };
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-// ---
-//
-//
 var allEnemies = [];
-var enemyOne = new Enemy(134);
-var enemyTwo = new Enemy(218);
-var enemyThree = new Enemy(300);
+
+var enemyPosition = {
+    0: 134,
+    1: 218,
+    2: 300
+};
+
+var enemyOne = new Enemy(enemyPosition[getRandomArbitraryWhole(0, 2)]);
+var enemyTwo = new Enemy(enemyPosition[getRandomArbitraryWhole(0, 2)]);
+var enemyThree = new Enemy(enemyPosition[getRandomArbitraryWhole(0, 2)]);
 
 allEnemies[0] = enemyOne;
 allEnemies[1] = enemyTwo;
@@ -218,9 +177,6 @@ allEnemies[2] = enemyThree;
 
 var player = new player();
 player.playerRespawnNegative();
-
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
 
 document.addEventListener('keydown', function(e) {
     var allowedKeys = {
