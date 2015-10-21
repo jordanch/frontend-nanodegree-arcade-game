@@ -19,6 +19,9 @@ function getRandomArbitraryWhole(min, max) {
 };
 
 var Enemy = function(y) {
+    /*
+    *   This is the Enemy construction class function.
+    */
     this.movement = getRandomArbitrary(3, 10); // random movement speed for instanstiated enemy object 
     this.x = LEFTOFCANVAS;
     this.y = y;
@@ -50,7 +53,7 @@ Enemy.prototype.render = function() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y); 
     }
     else {
-        this.movement = getRandomArbitrary(3, 5); // when an enemy reaches the canvas's "virtual" right hand side, it's movement must be randomly adjusted before it respawns. 
+        this.movement = getRandomArbitrary(3, 5); // when an enemy reaches the canvas's "virtual" right hand side, it's movement and lane must be randomly adjusted before it respawns. 
         this.x = LEFTOFCANVAS;
         this.y = enemyPosition[getRandomArbitraryWhole(0, 2)];
     };
@@ -77,6 +80,9 @@ var player = function() {
     this.hasReachedEnd = false // flag -- initialized
     
     this.playerRespawnNegative = function() {
+        /*
+        *   this function respawns the player and reduces the player's total points unless the player is on 0 points, then no points are deducted
+        */
         if (player.points !== 0) {
             player.points -= 1;
             document.getElementById("points").innerHTML = player.points;
@@ -86,6 +92,9 @@ var player = function() {
     };
 
     this.playerRespawnPositive = function() {
+        /*
+        *   this function 1. respawns the player 2. increases the player's total points 3. updates the HTML element with ID "points" and 4. changes the flag specific to whether or not the player has reached the water
+        */
         player.points += 1;
         document.getElementById("points").innerHTML = player.points;
         this.x = 218; 
@@ -94,6 +103,12 @@ var player = function() {
     };
 
     this.update = function() {
+        /*
+        *   this function updates the player's X and Y co-ordinates based on the player's movement vector. If the user has pressed any keys and updated the player's movement vector,
+        *   then the player's co-ordinates will update at the point of this function's calling (which is very often based on engine.js). This function also checks to see whether the
+        *   player has reached the water and based on the flag condition (hasReachedEnd) and the player's Y-cordindate, either sets a timer for the playerRespawnPositive function to be 
+        *   executed after 2s, or if the player has moved since reached the water but before 2s has been reached, cancels the timer.  
+        */
         this.x += this.movement[0];
         this.movement[0] = 0; // reset movement[0] Z vector after each frame update
         this.y += this.movement[1];
@@ -110,6 +125,9 @@ var player = function() {
     };
 
     this.render = function() {
+        /*
+        *   This function renders the player's sprite at the player's X and Y co-ordinates. 
+        */
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     };
     
@@ -153,6 +171,10 @@ var player = function() {
     };
 
     this.handleKeyUp = function(keyCodeString) {
+        /*
+        *   This function assits in ensuring desired player movement. As is, the player can only move once with each KeyDown event, and only after a KeyUp event can
+        *   another movement occur. 
+        */
         if (keyCodeString == 'down' || keyCodeString == 'up' || keyCodeString == 'left' || keyCodeString == 'right') { 
                 this.userKeyPress = false;
         }; 
@@ -195,7 +217,7 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-    player.handleKeyUp(allowedKeys[e.keyCode]); //implementtion for callback with event object parameter 'keyCode' :  http://www.w3schools.com/jsref/event_key_keycode.asp
+    player.handleKeyUp(allowedKeys[e.keyCode]); // implementtion for callback with event object parameter 'keyCode' :  http://www.w3schools.com/jsref/event_key_keycode.asp
 });
 
 
