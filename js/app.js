@@ -42,11 +42,7 @@ Enemy.prototype.collission = function() {
         this.x + this.width > player.x && 
         this.y < player.y + player.height && 
         this.y + this.height > player.y) {
-            player.playerRespawn();
-            if (player.points !== 0) {
-                player.points -= 1;
-                document.getElementById("points").innerHTML = player.points;
-            };
+            player.playerRespawnNegative();
     };
 
 
@@ -90,28 +86,68 @@ var player = function() {
     this.center = [this.width / 2, this.height / 2];
     this.userKeyPress = false; // flag
     this.points = 0;
+    this.hasReachedEnd = false // flag -- initialized
     
-    this.playerRespawn = function() {
-        this.x = 218; // initialize player start x co-ord
-        this.y = 470; // initialize player start y co-ord
+    this.playerRespawnNegative = function() {
+        if (player.points !== 0) {
+            player.points -= 1;
+            document.getElementById("points").innerHTML = player.points;
+        };
+        this.x = 218; 
+        this.y = 470; 
+    };
+
+    this.playerRespawnPositive = function() {
+        player.points += 1;
+        document.getElementById("points").innerHTML = player.points;
+        this.x = 218; 
+        this.y = 470; 
+        console.log(this.x);
+        console.log(this.y);
+        this.hasReachedEnd = false;  
+        console.log(this.hasReachedEnd);
     };
      
+    // this.update = function() {
+    //     this.x += this.movement[0];
+    //     this.movement[0] = 0; //reset movement[0] Z vector after each frame update
+    //     this.y += this.movement[1];
+    //     this.movement[1] = 0; //reset movement[1] Y vector after each frame update
+    //     if (this.y < 100) {
+    //         var timeAtCall = Date.now();
+    //         while (this.y < 100) {
+    //             var timeAtCallNewTick = Date.now();
+    //             if (timeAtCallNewTick > timeAtCall + 2000) {
+    //                 this.playerRespawn();
+    //                 this.points += 1;
+    //                 document.getElementById("points").innerHTML = this.points;
+                    
+    //             };
+    //         };
+    //     };
+    // };
+
     this.update = function() {
         this.x += this.movement[0];
         this.movement[0] = 0; //reset movement[0] Z vector after each frame update
         this.y += this.movement[1];
         this.movement[1] = 0; //reset movement[1] Y vector after each frame update
-        if (this.y < 100) {
-            var timeAtCall = Date.now();
-            while (this.y < 100) {
-                var timeAtCallNewTick = Date.now();
-                if (timeAtCallNewTick > timeAtCall + 2000) {
-                    this.points += 1;
-                    document.getElementById("points").innerHTML = this.points;
-                    this.playerRespawn();
-                };
-            };
+        if (this.y < 100 && this.hasReachedEnd == false) {
+            this.hasReachedEnd = true;   
+            console.log(this.hasReachedEnd);
+            var timeout = window.setTimeout(this.playerRespawnPositive.bind(this), 2000);
+        }
+        else if (this.y > 100) {
+            clearTimeout(timeout);
         };
+        
+        
+
+        // while (this.hasReachedEnd == true) {
+        //     this.hasReachedEnd = false; // change flag to false
+            
+        //     console.log('changed to false');    
+        // };
     };
 
     this.render = function() {
@@ -181,7 +217,7 @@ allEnemies[1] = enemyTwo;
 allEnemies[2] = enemyThree;
 
 var player = new player();
-player.playerRespawn();
+player.playerRespawnNegative();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
