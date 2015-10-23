@@ -136,8 +136,6 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
-
-
         renderEntities();
     }
 
@@ -152,8 +150,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
-        player.render(); //this is *******************************************************************************
+        player.render();
     }
 
     /* This function does nothing but it could have been a good place to
