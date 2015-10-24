@@ -84,9 +84,9 @@ var player = function() {
         /*
         *   this function respawns the player and reduces the player's total points unless the player is on 0 points, then no points are deducted
         */
-        if (player.points !== 0) {
-            player.points -= 1;
-            document.getElementById('points').innerHTML = player.points;
+        if (this.points !== 0) {
+            this.points -= 1;
+            document.getElementById('points').innerHTML = this.points;
         };
         this.x = 218;
         this.y = 470;
@@ -96,8 +96,8 @@ var player = function() {
         /*
         *   this function 1. respawns the player 2. increases the player's total points 3. updates the HTML element with ID "points" and 4. changes the flag specific to whether or not the player has reached the water
         */
-        player.points += 1;
-        document.getElementById('points').innerHTML = player.points;
+        this.points += 1;
+        document.getElementById('points').innerHTML = this.points;
         this.x = 218;
         this.y = 470;
         this.hasReachedEnd = false;
